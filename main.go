@@ -207,7 +207,7 @@ func main() {
 		fatal("model is required; set --model or config model")
 	}
 
-	apiKey, err := config.ResolveAPIKey(provider)
+	apiKey, err := config.ResolveAPIKey(provider, cfg.APIKeyEnv)
 	if err != nil {
 		fatal(err.Error())
 	}

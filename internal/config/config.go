@@ -22,6 +22,7 @@ type Config struct {
 	Timeout         int    `toml:"timeout"`
 	OpenRouterRef   string `toml:"openrouter_referer"`
 	OpenRouterTitle string `toml:"openrouter_title"`
+	APIKeyEnv       string `toml:"api_key_env"`
 }
 
 func DefaultConfig() Config {
@@ -36,6 +37,7 @@ func DefaultConfig() Config {
 		Timeout:         120,
 		OpenRouterRef:   "",
 		OpenRouterTitle: "",
+		APIKeyEnv:       "",
 	}
 }
 
@@ -81,6 +83,7 @@ func ApplyEnvOverrides(cfg *Config) {
 	setStringEnv(&cfg.OpenRouterTitle, "GOMMIT_OPENROUTER_TITLE")
 	setStringEnv(&cfg.OpenRouterRef, "OPENROUTER_REFERER")
 	setStringEnv(&cfg.OpenRouterTitle, "OPENROUTER_TITLE")
+	setStringEnv(&cfg.APIKeyEnv, "GOMMIT_API_KEY_ENV")
 }
 
 func setStringEnv(target *string, key string) {
@@ -110,7 +113,14 @@ func setBoolEnv(target *bool, key string) {
 	*target = strings.EqualFold(val, "true") || val == "1"
 }
 
-func ResolveAPIKey(provider string) (string, error) {
+func ResolveAPIKey(provider, keyEnv string) (string, error) {
+	if name := strings.TrimSpace(keyEnv); name != "" {
+		val := strings.TrimSpace(os.Getenv(name))
+		if val == "" {
+			return "", fmt.Errorf("missing API key in env var %q (provider %q)", name, provider)
+		}
+		return val, nil
+	}
 	keys := []string{"GOMMIT_API_KEY"}
 	switch strings.ToLower(provider) {
 	case "openai":
