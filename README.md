@@ -95,6 +95,7 @@ max_prompt_chars = 0
 clean_output = true
 openrouter_referer = "https://example.com"
 openrouter_title = "gommit"
+api_key_env = "MY_OPENAI_KEY"
 ```
 
 When `clean_output = true`, gommit strips common LLM preamble and postamble
@@ -110,6 +111,9 @@ API keys:
 - `ANTHROPIC_API_KEY`
 - `GOMMIT_API_KEY` (fallback)
 
+When `api_key_env` is set (config) or `GOMMIT_API_KEY_ENV` is set, only that
+variable is read; the provider-specific vars and `GOMMIT_API_KEY` are ignored.
+
 Config overrides:
 
 - `GOMMIT_PROVIDER`
@@ -121,6 +125,7 @@ Config overrides:
 - `GOMMIT_CLEAN_OUTPUT`
 - `GOMMIT_OPENROUTER_REFERER`
 - `GOMMIT_OPENROUTER_TITLE`
+- `GOMMIT_API_KEY_ENV`
 - `OPENROUTER_REFERER`
 - `OPENROUTER_TITLE`
 
